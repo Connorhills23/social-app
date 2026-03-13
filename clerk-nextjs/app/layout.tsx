@@ -55,7 +55,6 @@ function NewPostModal({
     try {
       setLoading(true);
 
-      // Ensure user exists in Supabase
       const { error: userError } = await supabase.from("users").upsert({
         clerk_id: user.id,
         username: user.username ?? "anonymous",
@@ -66,7 +65,6 @@ function NewPostModal({
         return;
       }
 
-      // Insert post
       const { error: postError } = await supabase.from("posts").insert({
         user_id: user.id,
         content: newPost,
@@ -90,10 +88,8 @@ function NewPostModal({
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Portal>
-        {/* Overlay */}
         <Dialog.Overlay className="fixed inset-0 bg-black/40" />
 
-        {/* Modal */}
         <Dialog.Content
           className="fixed top-1/2 left-1/2 
           -translate-x-1/2 -translate-y-1/2 
