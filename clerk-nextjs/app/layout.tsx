@@ -12,7 +12,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Global modal state
   const [isOpen, setIsOpen] = useState(false);
   const [newPost, setNewPost] = useState("");
 
@@ -20,13 +19,10 @@ export default function RootLayout({
     <html lang="en">
       <ClerkProvider>
         <body className="bg-gray-50">
-          {/* Navbar */}
           <Navbar openCreatePost={() => setIsOpen(true)} />
 
-          {/* Page content */}
           <main className="pt-24">{children}</main>
 
-          {/* Global New Post Modal */}
           <NewPostModal
             isOpen={isOpen}
             setIsOpen={setIsOpen}
@@ -39,9 +35,6 @@ export default function RootLayout({
   );
 }
 
-// ----------------------
-// NewPostModal Component
-// ----------------------
 function NewPostModal({
   isOpen,
   setIsOpen,
@@ -58,19 +51,17 @@ function NewPostModal({
   const createPost = async () => {
     if (!user || newPost.trim() === "") return;
 
-    // Ensure user exists
     await supabase.from("users").upsert({
       clerk_id: user.id,
       username: user.username,
-      bio: user?.bio || "",
+      bio: "",
     });
 
-    // Insert post
     const { error } = await supabase.from("posts").insert({
       user_id: user.id,
       content: newPost,
       username: user.username,
-      bio: user?.bio || "",
+      bio: "",
     });
 
     if (error) console.error("Error creating post:", error);
